@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateSubscriptionHistoriesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('subscription_histories', function (Blueprint $table) {
+            $table->id();
+            $table->string('event');
+            $table->bigInteger('subscription_id')->unsigned();
+            $table->string('charge_id')->nullable();
+            $table->timestamps();
+
+            $table
+                ->foreign('subscription_id')
+                ->references('id')
+                ->on('subscriptions');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('subscription_histories');
+    }
+}

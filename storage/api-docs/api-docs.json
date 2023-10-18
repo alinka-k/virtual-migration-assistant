@@ -1,0 +1,2629 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "MM Swagger Api",
+        "contact": {
+            "email": "alexey@sportysystems.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:1000/api",
+            "description": "Dev MM Server"
+        },
+        {
+            "url": "http://localhost:1000/",
+            "description": "Local MM Server"
+        }
+    ],
+    "paths": {
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Registration"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "403": {
+                        "description": "Account is not created."
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Login"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Authorization": {
+                                "description": "Authorization Key",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "Access-Control-Expose-Headers": {
+                                "description": "Accessed headers",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResourceResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/verify": {
+            "get": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "verify",
+                "parameters": [
+                    {
+                        "name": "expires",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "hash",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "signature",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden Error"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "get": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "refresh",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Authorization": {
+                                "description": "Authorization Key",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "Access-Control-Expose-Headers": {
+                                "description": "Accessed headers",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResourceResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/forgot-password": {
+            "get": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "forgotPassword",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResourceResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "This email address is not registered"
+                    }
+                }
+            }
+        },
+        "/auth/reset-password": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "resetPassword",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResourceResponse"
+                                }
+                            }
+                        }
+                    },
+                    "423": {
+                        "description": "The given data was invalid"
+                    }
+                }
+            }
+        },
+        "/auth/reset-password/{token}/{email}": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "resetPassword",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResourceResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/facebook": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "postFacebook",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthSocial"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResourceResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Something went wrong."
+                    }
+                }
+            }
+        },
+        "/auth/google": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "postGoogle",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthSocial"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResourceResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Something went wrong."
+                    }
+                }
+            }
+        },
+        "/auth/office": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "postOffice",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthSocial"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResourceResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Something went wrong."
+                    }
+                }
+            }
+        },
+        "/evaluate": {
+            "post": {
+                "tags": [
+                    "evaluate"
+                ],
+                "operationId": "evaluate.store",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvaluationScore"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/evaluate-virtual": {
+            "post": {
+                "tags": [
+                    "evaluate"
+                ],
+                "operationId": "evaluate.virtual",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EvaluationVirtual"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvaluationVirtual"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/evaluation-score": {
+            "get": {
+                "tags": [
+                    "evaluate"
+                ],
+                "operationId": "evaluation-score.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvaluationScore"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/virtual-evaluation-score": {
+            "get": {
+                "tags": [
+                    "evaluate"
+                ],
+                "operationId": "virtual-evaluation-score.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvaluationScore"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/virtual-profile/canadian-relatives": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "canadian-relatives.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VirtualRelatives"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/virtual-profile/education": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "virtual-profile.education.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VirtualEducation"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/virtual-profile/language/{language}": {
+            "get": {
+                "tags": [
+                    "virtual-profile"
+                ],
+                "operationId": "virtual-profile.language.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VirtualLanguage"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/virtual-profile/occupations-demand": {
+            "get": {
+                "tags": [
+                    "virtual-profile"
+                ],
+                "operationId": "virtual-profile.occupations-demand.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VirtualOccupationsDemand"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/virtual-profile/spouse": {
+            "get": {
+                "tags": [
+                    "virtual-profile"
+                ],
+                "operationId": "virtual-profile.spouse.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VirtualSpouse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/virtual-profile/study-canada": {
+            "get": {
+                "tags": [
+                    "virtual-profile"
+                ],
+                "operationId": "virtual-profile.study-canada.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VirtualStudyCanada"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/virtual-profile/work-canada": {
+            "get": {
+                "tags": [
+                    "virtual-profile"
+                ],
+                "operationId": "virtual-profile.work-canada.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VirtualWorkCanada"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/virtual-profile/work-history": {
+            "get": {
+                "tags": [
+                    "virtual-profile"
+                ],
+                "operationId": "virtual-profile.work-history.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VirtualWork"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/canadian-job-offer": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "canadian-job-offer.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CanadianJobOffer"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "canadian-job-offer.store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CanadianJobOffer"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/canadian-relatives": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "canadian-relatives.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CanadianRelatives"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "canadian-relatives.store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CanadianRelatives"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/comments": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "comments.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Comments"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "comments.store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Comments"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/education": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "education.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Education"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "education.store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Education"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/express": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "express.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Express"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "express.store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Express"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/future-plan": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "future-plan.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FuturePlan"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "future-plan.store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FuturePlan"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/language": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "language.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Language"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "App\\Http\\Controllers\\User\\LanguageController::store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Language"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/clb/{language}": {
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "App\\Http\\Controllers\\User\\LanguageController::getCLB",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VirtualLanguage"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/manitoba": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "manitoba.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Manitoba"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "manitoba.store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Manitoba"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/net-worth": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "net-worth.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NetWorth"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "net-worth.store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NetWorth"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/profile": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "profile.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Profile"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "profile.store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Profile"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/spouse": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "spouse.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Spouse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "spouse.store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Spouse"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/user": {
+            "get": {
+                "tags": [
+                    "auth"
+                ],
+                "operationId": "user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResourceResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/work-history": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "work-history.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Work"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "profile"
+                ],
+                "operationId": "work-history.store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Work"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/paths": {
+            "get": {
+                "tags": [
+                    "virtual-profile"
+                ],
+                "operationId": "paths.show",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Path"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "EvaluationScore": {
+                "title": "Evaluation Score",
+                "description": "Evaluation Score",
+                "properties": {
+                    "fsw": {
+                        "type": "integer",
+                        "format": "number"
+                    },
+                    "crs": {
+                        "type": "integer",
+                        "format": "number"
+                    },
+                    "result": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "has_high_crs": {
+                        "type": "boolean",
+                        "format": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "AbroadStudyExperience": {
+                "properties": {
+                    "type_of_program": {
+                        "type": "string"
+                    },
+                    "duration": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "EvaluationVirtual": {
+                "properties": {
+                    "abroadStudyExperience": {
+                        "format": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AbroadStudyExperience"
+                        }
+                    },
+                    "canadianJobOffer": {
+                        "$ref": "#/components/schemas/VirtualCanadianJobOffer"
+                    },
+                    "canadianStudyExperience": {
+                        "format": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VirtualCanadianStudyExperience"
+                        }
+                    },
+                    "canadianWorkExperience": {
+                        "format": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VirtualCanadianWorkExperience"
+                        }
+                    },
+                    "entrepreneurship": {
+                        "$ref": "#/components/schemas/VirtualEntrepreneurship"
+                    },
+                    "language": {
+                        "$ref": "#/components/schemas/VirtualLanguageEvaluate"
+                    },
+                    "relatives": {
+                        "$ref": "#/components/schemas/VirtualRelativesEvaluate"
+                    },
+                    "spouse": {
+                        "$ref": "#/components/schemas/VirtualSpouseEvaluate"
+                    },
+                    "work": {
+                        "$ref": "#/components/schemas/VirtualWorkEvaluate"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualCanadianJobOffer": {
+                "properties": {
+                    "occupation": {
+                        "type": "string"
+                    },
+                    "province": {
+                        "type": "string"
+                    },
+                    "duration": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualCanadianStudyExperience": {
+                "properties": {
+                    "completed": {
+                        "type": "boolean"
+                    },
+                    "completion_date": {
+                        "type": "string"
+                    },
+                    "duration": {
+                        "type": "string"
+                    },
+                    "location": {
+                        "type": "string"
+                    },
+                    "mb_field_in_steam": {
+                        "type": "string"
+                    },
+                    "mb_steam_internship": {
+                        "type": "string"
+                    },
+                    "province": {
+                        "type": "string"
+                    },
+                    "type_of_program": {
+                        "type": "string"
+                    },
+                    "institution": {
+                        "type": "string"
+                    },
+                    "program_name": {
+                        "type": "string"
+                    },
+                    "field_of_study": {
+                        "type": "string"
+                    },
+                    "mb_bridging_program": {
+                        "type": "string"
+                    },
+                    "resided_16_months_in_atlantic_province": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualCanadianWorkExperience": {
+                "properties": {
+                    "occupation": {
+                        "type": "boolean"
+                    },
+                    "province": {
+                        "type": "string"
+                    },
+                    "when": {
+                        "type": "string"
+                    },
+                    "duration": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualEntrepreneurship": {
+                "properties": {
+                    "business_owner_experience": {
+                        "type": "boolean"
+                    },
+                    "currency": {
+                        "type": "string"
+                    },
+                    "net_worth": {
+                        "type": "integer"
+                    },
+                    "senior_manager_experience": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualLanguageEvaluate": {
+                "properties": {
+                    "english": {
+                        "$ref": "#/components/schemas/VirtualLanguageEvaluateItem"
+                    },
+                    "french": {
+                        "$ref": "#/components/schemas/VirtualLanguageEvaluateItem"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualLanguageEvaluateItem": {
+                "properties": {
+                    "clb": {
+                        "type": "integer"
+                    },
+                    "language_test": {
+                        "type": "boolean"
+                    },
+                    "listening": {
+                        "type": "integer"
+                    },
+                    "reading": {
+                        "type": "integer"
+                    },
+                    "speaking": {
+                        "type": "integer"
+                    },
+                    "writing": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualRelativesEvaluate": {
+                "properties": {
+                    "canadian_status": {
+                        "type": "string"
+                    },
+                    "province": {
+                        "type": "string"
+                    },
+                    "relationship": {
+                        "type": "string"
+                    },
+                    "residency_duration": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualSpouseEvaluate": {
+                "properties": {
+                    "english": {
+                        "type": "number"
+                    },
+                    "french": {
+                        "type": "number"
+                    },
+                    "inside": {
+                        "$ref": "#/components/schemas/VirtualSpouseEvaluateInside"
+                    },
+                    "outside": {
+                        "$ref": "#/components/schemas/VirtualSpouseEvaluateOutside"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualSpouseEvaluateInside": {
+                "properties": {
+                    "highschool_completed": {
+                        "type": "boolean"
+                    },
+                    "type_of_program": {
+                        "type": "string"
+                    },
+                    "duration": {
+                        "type": "string"
+                    },
+                    "skilled": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "unskilled": {
+                        "type": "number",
+                        "format": "double"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualSpouseEvaluateOutside": {
+                "properties": {
+                    "highschool_completed": {
+                        "type": "boolean"
+                    },
+                    "province": {
+                        "type": "string"
+                    },
+                    "type_of_program": {
+                        "type": "string"
+                    },
+                    "duration": {
+                        "type": "string"
+                    },
+                    "skilled": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "unskilled": {
+                        "type": "number",
+                        "format": "double"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualWorkEvaluate": {
+                "properties": {
+                    "skilled": {
+                        "type": "string"
+                    },
+                    "unskilled": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "CanadianJobOffer": {
+                "title": "Users Canadian Job Offer",
+                "description": "Users Canadian Job Offer",
+                "properties": {
+                    "has_offer": {
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "occupation": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "province": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "district": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "in_bc_northeast_development_region": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "wage": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "duration": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "schedule_type": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "from_current_employer": {
+                        "type": "boolean",
+                        "format": "string"
+                    },
+                    "has_lmia_approved": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "is_lmia_except": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "is_related_to_study": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "related_experience_years": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "bc_industry_training_authority_certificate": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "ab_related_edu_or_experience": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "ab_child_care_experience": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "sask_1a_driver_licence": {
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "ns_health_authority": {
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "mb_invitation_to_apply": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "atlantic_pilot_registered_employer": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "CanadianRelatives": {
+                "title": "Users Canadian Relatives",
+                "description": "Users Canadian Relatives",
+                "properties": {
+                    "has_friend_mb": {
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "has_relatives": {
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "relatives": {
+                        "type": "array",
+                        "format": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CanadianRelativesItem"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CanadianRelativesItem": {
+                "title": "Users Canadian Relatives Item",
+                "description": "Users Canadian Relatives Item",
+                "properties": {
+                    "relationship": {
+                        "title": "Relationship",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Mr/Mrs/Miss/Ms/Dr/Other"
+                    },
+                    "canadian_status": {
+                        "title": "Name",
+                        "type": "string",
+                        "format": "string",
+                        "example": "John Doe"
+                    },
+                    "province": {
+                        "title": "Date of Birth",
+                        "type": "string",
+                        "format": "string",
+                        "example": "2000-12-31"
+                    },
+                    "residency_duration": {
+                        "title": "Residence Country",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Italy"
+                    }
+                },
+                "type": "object"
+            },
+            "Comments": {
+                "title": "User's Comments",
+                "description": "User's Comments",
+                "properties": {
+                    "has_comments": {
+                        "title": "Has comments",
+                        "type": "boolean",
+                        "format": "boolean",
+                        "example": true
+                    },
+                    "foreign_exp_years": {
+                        "title": "Comments",
+                        "type": "string",
+                        "format": "string",
+                        "example": "text"
+                    }
+                },
+                "type": "object"
+            },
+            "Education": {
+                "title": "Users Education",
+                "description": "Users Education",
+                "properties": {
+                    "highschool_completed": {
+                        "title": "Have you completed high school (secondary school)?",
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "has_post_secondary_education": {
+                        "title": "Have you received any education or training other than high school (secondary school)?",
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "post_secondary_education": {
+                        "type": "array",
+                        "format": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/EducationItem"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "EducationItem": {
+                "title": "Users Education Item",
+                "description": "Users Education Item",
+                "properties": {
+                    "type_of_program": {
+                        "title": "Type of Program",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example"
+                    },
+                    "duration": {
+                        "title": "Program Duration",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example"
+                    },
+                    "completed": {
+                        "title": "Did you complete this program?",
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "location": {
+                        "title": "Location",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example"
+                    },
+                    "province": {
+                        "title": "Province or Territory",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example"
+                    },
+                    "institution": {
+                        "title": "Name of Institution",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example"
+                    },
+                    "program_name": {
+                        "title": "Name of Program",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example"
+                    },
+                    "field_of_study": {
+                        "title": "Field of Study",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example"
+                    },
+                    "completion_date": {
+                        "title": "When did you complete this program?",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example"
+                    },
+                    "mb_steam_internship": {
+                        "title": "Was this a graduate program in STEM (Science, Technology, Engineering and Math)?",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example"
+                    },
+                    "mb_bridging_program": {
+                        "title": "Have you completed an internship with eligible industry and research enterprises in Manitoba?",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example"
+                    },
+                    "resided_16_months_in_atlantic_province": {
+                        "title": "Have you lived in one of Canada’s Atlantic provinces  (New Brunswick, Newfoundland and Labrador, Nova Scotia, or Prince Edward Island) for at least 16 months in the 2 years before getting your degree, diploma or educational credential?",
+                        "type": "boolean",
+                        "format": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "Express": {
+                "title": "User Express Entry",
+                "description": "User Profile Express Entry",
+                "properties": {
+                    "existing_profile": {
+                        "title": "Have you already submitted an Express Entry profile to the Government of Canada within the past 12 months?",
+                        "type": "boolean",
+                        "format": "boolean",
+                        "example": true
+                    },
+                    "invitation_received": {
+                        "title": "Have you already received an Invitation to Apply for permanent residence from the Government of Canada through the Express Entry system?",
+                        "type": "boolean",
+                        "format": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "FuturePlan": {
+                "title": "Users Future Plan",
+                "description": "Users Future Plan",
+                "properties": {
+                    "is_graduation": {
+                        "title": "Are you graduating within a year?",
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "program_id": {
+                        "title": "Select program",
+                        "type": "integer",
+                        "format": "integer"
+                    },
+                    "graduation_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "is_user_program": {
+                        "title": "Is your program in Canada?",
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "user_program": {
+                        "title": "Select your Canadian",
+                        "type": "string"
+                    },
+                    "is_currently_employed": {
+                        "title": "Are you currently employed?",
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "is_interested_in_study": {
+                        "title": "Would you like to study in Canada?",
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "desired_study": {
+                        "title": "What would you like to study?",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "type_program": {
+                        "title": "Type of program",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "investment": {
+                        "title": "How much can you invest in studying in Canada?",
+                        "type": "integer",
+                        "format": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "Language": {
+                "title": "Users Language skills",
+                "description": "Users Language skills",
+                "properties": {
+                    "language_type": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "has_test": {
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "language_test": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "language_date": {
+                        "type": "string",
+                        "format": "datetime"
+                    },
+                    "writing_test": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "reading_test": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "speaking_test": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "listening_test": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "writing": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "reading": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "speaking": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "listening": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Manitoba": {
+                "title": "User Manitoba",
+                "description": "User Manitoba",
+                "properties": {
+                    "strategic_recruitment_invitation": {
+                        "title": "Strategic recruitment invitation",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Yes/No/dont know"
+                    }
+                },
+                "type": "object"
+            },
+            "NetWorth": {
+                "title": "User's Net Worth",
+                "description": "User's Net Worth",
+                "properties": {
+                    "currency": {
+                        "title": "Currency",
+                        "type": "string"
+                    },
+                    "net_worth": {
+                        "title": "Your Personal Net Worth",
+                        "type": "integer",
+                        "format": "number",
+                        "example": 1000
+                    }
+                },
+                "type": "object"
+            },
+            "Profile": {
+                "title": "User Profile",
+                "description": "User Profile Personal",
+                "properties": {
+                    "title": {
+                        "title": "Title",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Mr/Mrs/Miss/Ms/Dr/Other"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "type": "string",
+                        "format": "string",
+                        "example": "John Doe"
+                    },
+                    "dob": {
+                        "title": "Date of Birth",
+                        "type": "string",
+                        "format": "string",
+                        "example": "2000-12-31"
+                    },
+                    "residence_country": {
+                        "title": "Residence Country",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Italy"
+                    },
+                    "destination_province": {
+                        "title": "Destination Province",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Quebec"
+                    },
+                    "stay_in_quebec": {
+                        "title": "Stay in Quebec",
+                        "type": "boolean",
+                        "format": "boolean",
+                        "example": true
+                    },
+                    "stay_in_quebec_duration": {
+                        "title": "Stay in Quebec Duration",
+                        "type": "string",
+                        "format": "string",
+                        "example": "0/2w/3m/6m/1y"
+                    },
+                    "marital_status": {
+                        "title": "Marital Status",
+                        "type": "string",
+                        "format": "string",
+                        "example": "single/married/common-law"
+                    },
+                    "manitoba_city_preference": {
+                        "title": "Where in Manitoba do you wish to reside",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Winnipeg/Other/dont know"
+                    },
+                    "has_children": {
+                        "title": "Do you have any children under the age of 22?",
+                        "type": "boolean",
+                        "format": "boolean",
+                        "example": true
+                    },
+                    "children_0_12": {
+                        "title": "How many children do you have under the age of 13?",
+                        "type": "string",
+                        "format": "string",
+                        "example": "0/1/2/3/4"
+                    },
+                    "children_13_18": {
+                        "title": "How many children do you have aged 13 to 21?",
+                        "type": "string",
+                        "format": "string",
+                        "example": "0/1/2/3/4"
+                    }
+                },
+                "type": "object"
+            },
+            "Spouse": {
+                "title": "User's Spouse",
+                "description": "User's Spouse",
+                "properties": {
+                    "age": {
+                        "title": "Your spouses age",
+                        "type": "string",
+                        "format": "string",
+                        "example": 18
+                    },
+                    "education_level": {
+                        "title": "Education level",
+                        "type": "string",
+                        "format": "string",
+                        "example": "None/Secondary/1 yr diploma/2 yr diploma/Bachelor/2 diplomas/Master/Ph.D"
+                    },
+                    "english": {
+                        "title": "English level",
+                        "type": "string",
+                        "format": "string",
+                        "example": "12/9/7.5/7/5/4/0"
+                    },
+                    "french": {
+                        "title": "French level",
+                        "type": "string",
+                        "format": "string",
+                        "example": "12/9/7.5/7/5/4/0"
+                    },
+                    "has_foreign_work": {
+                        "title": "Has foreign work",
+                        "type": "boolean",
+                        "format": "boolean",
+                        "example": true
+                    },
+                    "foreign_exp_years": {
+                        "title": "Foreign exp years",
+                        "type": "string",
+                        "format": "string",
+                        "example": "1/2/3/4/5/6"
+                    },
+                    "has_canadian_work": {
+                        "title": "Has canadian work",
+                        "type": "boolean",
+                        "format": "boolean",
+                        "example": true
+                    },
+                    "canadian_exp_years": {
+                        "title": "Canadian exp years",
+                        "type": "string",
+                        "format": "string",
+                        "example": "1/2/3/4/5/6"
+                    }
+                },
+                "type": "object"
+            },
+            "Work": {
+                "title": "Users Work",
+                "description": "Users Work",
+                "properties": {
+                    "has_work_experience_10_yr": {
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "qualification_certificate": {
+                        "type": "boolean",
+                        "format": "boolean"
+                    },
+                    "history": {
+                        "type": "array",
+                        "format": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WorkHistory"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "WorkHistory": {
+                "title": "Users Work History",
+                "description": "Users Work History",
+                "properties": {
+                    "occupation": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "noc": {
+                        "format": "string"
+                    },
+                    "duration": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "when": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "schedule_type": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "work_type": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "location": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "province": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "related_to_study_field": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "work_permit": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "full_ownership": {
+                        "type": "boolean",
+                        "format": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "Path": {
+                "title": "Virtual Paths",
+                "description": "Virtual Paths",
+                "properties": {
+                    "id": {
+                        "format": "number"
+                    },
+                    "name": {
+                        "format": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualEducation": {
+                "title": "Virtual Education",
+                "description": "Virtual Education",
+                "properties": {
+                    "highschool_completed": {
+                        "title": "Have you completed high school (secondary school)?",
+                        "format": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualEducationItem": {
+                "title": "Virtual Education Item",
+                "description": "Virtual Education Item",
+                "properties": {
+                    "type_of_program": {
+                        "title": "Type of program",
+                        "format": "string",
+                        "items": {}
+                    },
+                    "duration": {
+                        "title": "Duration",
+                        "type": "array",
+                        "format": "string",
+                        "items": {}
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualLanguage": {
+                "title": "Users Virtual Language",
+                "description": "Users Virtual Language",
+                "properties": {
+                    "language_test": {
+                        "format": "string"
+                    },
+                    "writing": {
+                        "format": "string"
+                    },
+                    "reading": {
+                        "format": "string"
+                    },
+                    "speaking": {
+                        "format": "string"
+                    },
+                    "listening": {
+                        "format": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualOccupationsDemand": {
+                "title": "Virtual Occupations Demand",
+                "description": "Virtual Occupations Demand",
+                "properties": {
+                    "occupation": {
+                        "format": "string"
+                    },
+                    "inside": {
+                        "format": "number"
+                    },
+                    "outside": {
+                        "format": "number"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualRelatives": {
+                "title": "Virtual Canadian Relatives",
+                "description": "Virtual Canadian Relatives",
+                "properties": {
+                    "has_relatives": {
+                        "format": "boolean"
+                    },
+                    "relationship": {
+                        "format": "string"
+                    },
+                    "canadian_status": {
+                        "format": "string"
+                    },
+                    "province": {
+                        "format": "string"
+                    },
+                    "residency_duration": {
+                        "format": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualSpouse": {
+                "title": "Users Virtual Spouse",
+                "description": "Users Virtual Spouse",
+                "properties": {
+                    "skilled": {
+                        "format": "number"
+                    },
+                    "unskilled": {
+                        "format": "number"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualStudyCanada": {
+                "title": "Virtual Study Canada",
+                "description": "Virtual Study Canada",
+                "properties": {
+                    "type_of_program": {
+                        "format": "string"
+                    },
+                    "field_of_study": {
+                        "format": "string"
+                    },
+                    "province": {
+                        "format": "array",
+                        "items": {}
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualWork": {
+                "title": "Users Virtual Work",
+                "description": "Users Virtual Work",
+                "properties": {
+                    "skilled": {
+                        "format": "number"
+                    },
+                    "unskilled": {
+                        "format": "number"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualWorkCanada": {
+                "title": "Virtual Work Canada",
+                "description": "Virtual Work Canada",
+                "properties": {
+                    "occupation": {
+                        "format": "string"
+                    },
+                    "province": {
+                        "format": "array",
+                        "items": {}
+                    },
+                    "duration": {
+                        "format": "array",
+                        "items": {}
+                    }
+                },
+                "type": "object"
+            },
+            "AuthSocial": {
+                "title": "AuthSocial",
+                "description": "Auth Social",
+                "properties": {
+                    "code": {
+                        "title": "Code",
+                        "type": "string",
+                        "format": "string",
+                        "example": "SECURE_CODE_HERE"
+                    }
+                },
+                "type": "object"
+            },
+            "Login": {
+                "title": "Login",
+                "description": "login",
+                "properties": {
+                    "email": {
+                        "title": "email",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example@gmail.com"
+                    },
+                    "password": {
+                        "title": "password",
+                        "type": "string",
+                        "format": "string",
+                        "example": "securePasswOrd!"
+                    },
+                    "rememberMe": {
+                        "title": "rememberMe",
+                        "type": "boolean",
+                        "format": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "Registration": {
+                "title": "Registration",
+                "description": "Registration",
+                "properties": {
+                    "phone": {
+                        "title": "phone",
+                        "type": "string",
+                        "format": "string",
+                        "example": "+380501111111"
+                    },
+                    "email": {
+                        "title": "email",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example@gmail.com"
+                    },
+                    "password": {
+                        "title": "password",
+                        "type": "string",
+                        "format": "string",
+                        "example": "securePasswOrd!"
+                    }
+                },
+                "type": "object"
+            },
+            "UserResourceResponse": {
+                "title": "UserResourse",
+                "description": "User Resourse",
+                "properties": {
+                    "email": {
+                        "title": "Email",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example@gmail.com"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "type": "string",
+                        "format": "string",
+                        "example": "John Doe"
+                    },
+                    "created_at": {
+                        "title": "Created Date",
+                        "type": "string",
+                        "format": "timestamp",
+                        "example": ""
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "auth"
+        },
+        {
+            "name": "profile"
+        },
+        {
+            "name": "evaluate"
+        },
+        {
+            "name": "virtual-profile"
+        }
+    ]
+}
